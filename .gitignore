@@ -1,0 +1,41 @@
+##PARA EL BACKEND##
+#entorno virtual
+venv/
+
+# Creado por setuptools
+*.pyc
+*.pyo
+*.pyd
+
+# pycache
+__pycache__/
+
+# Base de datos sqlite3
+*.sqlite3
+
+
+##PARA EL FRONTEND##
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
