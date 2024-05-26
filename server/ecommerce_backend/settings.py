@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Use JSON structure with Django Rest Framework
     'rest_framework',
-    #Apps por implementar:users, products, checkout
+    #Apps to implementedd:products, checkout
+    'app_users',
     #Auth users with JWT
     'rest_framework_simplejwt',
 ]
@@ -175,3 +176,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+#Dirigir los usuarios al modelo creado
+AUTH_USER_MODEL = 'app_users.User'
