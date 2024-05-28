@@ -89,8 +89,8 @@ def delete_user(request, pk):
         try:
             user = User.objects.get(pk=pk)
             user.is_active = False
-            user.save()
-            user.delete()
+            user.save() 
+            #user.delete() No podemos eliminar, solamente desactivar
             return Response({"message": 'Usuario eliminado', "status":200})
         except ObjectDoesNotExist:
             return Response({"message": 'Usuario no encontrado', "status":404})
