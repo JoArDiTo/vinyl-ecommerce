@@ -10,7 +10,7 @@ from rest_framework import exceptions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = 'id', 'email', 'password', 'first_name', 'last_name', 'phone', 'is_active', 'is_superuser', 'last_login'
+        fields = 'id', 'email', 'password', 'first_name', 'last_name', 'phone', 'is_active', 'is_superuser', 'is_staff' ,'last_login'
         
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -49,6 +49,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             
             user = User.objects.get(email=credentials['email'])
             if user.check_password(credentials['password']):
+                if not user.is_active:
+                    raise exceptions.AuthenticationFailed('El usuario no está activo')
                 update_last_login(None, user)
             else:
                 raise exceptions.AuthenticationFailed('Contraseña incorrecta')

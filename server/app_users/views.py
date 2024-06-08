@@ -7,14 +7,14 @@ from .serializer import UserSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework import exceptions
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get_users(request):
     if request.method == 'GET':
         users = User.objects.all()
@@ -51,6 +51,7 @@ def get_user(request, pk):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+@permission_required('app_users.change_user', raise_exception=True)
 def update_user(request, pk):
     if request.method == 'PUT':
         try:
@@ -59,6 +60,8 @@ def update_user(request, pk):
             data.pop('id', None)
             data.pop('password', None)
             serializer = UserSerializer(user, data=data, partial=True)
+            if User.objects.filter(email=data['email']).exclude(pk=pk).exists():
+                return Response({"message": 'El correo ha actualizar ya existe', "status":400})
             if serializer.is_valid():
                 serializer.save()
                 return Response({"user": serializer.data, "message": 'Usuario actualizado', "status":200})
@@ -69,6 +72,7 @@ def update_user(request, pk):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+@permission_required('app_users.change_user', raise_exception=True)
 def update_password(request, pk):
     if request.method == 'PUT':
         try:
@@ -84,13 +88,13 @@ def update_password(request, pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+@permission_required('app_users.delete_user', raise_exception=True)
 def delete_user(request, pk):
     if request.method == 'DELETE':
         try:
             user = User.objects.get(pk=pk)
             user.is_active = False
-            user.save() 
-            #user.delete() No podemos eliminar, solamente desactivar
+            user.save()
             return Response({"message": 'Usuario eliminado', "status":200})
         except ObjectDoesNotExist:
             return Response({"message": 'Usuario no encontrado', "status":404})

@@ -12,16 +12,20 @@ def create_client_group(sender, **kwargs):
     group, created = Group.objects.get_or_create(name=group_name)
     
     if created:
-        user_content_type = ContentType.objects.get_for_model(User)
+        models_and_permissions = {
+            User: ['view_user', 'change_user', 'delete_user'],
+            # permissions for products and checkout to implement            
+        }
         
-        permissions = ['view_user', 'change_user', 'delete_user']
-        
-        for perm in permissions:
-            permission = Permission.objects.get(
-                codename=perm,
-                content_type=user_content_type,
-            )
-            group.permissions.add(permission)
+        for model, permissions in models_and_permissions.items():
+            content_type = ContentType.objects.get_for_model(model)
+            
+            for perm in permissions:
+                permission = Permission.objects.get(
+                    codename=perm,
+                    content_type=content_type,
+                )
+                group.permissions.add(permission)
         
         print(f'Added "{group_name}" group and assigned permissions.')
     else:
