@@ -34,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def save(self, *args, **kwargs):
         if not self.id:
-            self.id = str(('user' if not self.is_superuser else 'admin') + str(random.randint(10000,99999)))
+            self.id = str(('user' if not self.is_superuser else 'admin') + str(random.randint(100000,999999)))
         self.is_staff = self.is_superuser
         super(User, self).save(*args, **kwargs)
         if not self.groups.exists() and not self.is_superuser:

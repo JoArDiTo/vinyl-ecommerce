@@ -3,9 +3,10 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.dispatch import receiver
 from .models import User
+from app_checkout.models import CreditCard, Purchase
 from django.apps import apps
 
-@receiver(post_migrate, sender=apps.get_app_config('app_users'))
+@receiver(post_migrate, sender=apps.get_app_config('app_checkout'))
 def create_client_group(sender, **kwargs):
     group_name = 'client'
     
@@ -13,8 +14,9 @@ def create_client_group(sender, **kwargs):
     
     if created:
         models_and_permissions = {
-            User: ['view_user', 'change_user', 'delete_user'],
-            # permissions for products and checkout to implement            
+            User: ['change_user', 'delete_user', 'view_user'],
+            CreditCard: ['add_creditcard', 'change_creditcard', 'delete_creditcard', 'view_creditcard'],
+            Purchase: ['add_purchase', 'change_purchase', 'delete_purchase', 'view_purchase'],          
         }
         
         for model, permissions in models_and_permissions.items():

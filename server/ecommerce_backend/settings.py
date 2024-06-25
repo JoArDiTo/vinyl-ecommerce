@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Use JSON structure with Django Rest Framework
     'rest_framework',
-    #Apps to implementedd:products, checkout
+    #Apps
     'app_users',
+    'app_products',
+    'app_checkout',
     #Auth users with JWT
     'rest_framework_simplejwt',
 ]
